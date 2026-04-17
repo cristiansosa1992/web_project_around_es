@@ -100,6 +100,8 @@ function handleProfileFormSubmit(evt) {
 
   profileTitle.textContent = nameValue;
   profileDescription.textContent = jobValue;
+
+   closeModal(editPopup);
 }
 
 // conectar la función al formulario
