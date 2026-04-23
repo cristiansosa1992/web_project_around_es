@@ -1,6 +1,4 @@
-
 // Datos iniciales
-
 const initialCards = [
   {
     name: "Valle de Yosemite",
@@ -28,11 +26,7 @@ const initialCards = [
   }
 ];
 
-
-
 // Selección de elementos
-
-
 const editButton = document.querySelector(".profile__edit-button");
 const editPopup = document.querySelector("#edit-popup");
 const newCardPopup = document.querySelector("#new-card-popup");
@@ -63,11 +57,7 @@ const cardsContainer = document.querySelector(".cards__list");
 const cardTitle = document.querySelector(".popup__input_type_card-name");
 const cardLink = document.querySelector(".popup__input_type_url");
 
-
-
 // Funciones reutilizables
-
-
 function openModal(modal) {
   modal.classList.add("popup_is-opened");
 }
@@ -76,17 +66,12 @@ function closeModal(modal) {
   modal.classList.remove("popup_is-opened");
 }
 
-
 // cerrar popup imagen
 closeImagePopupBtn.addEventListener("click", function () {
   closeModal(imagePopup);
 });
 
-
-
 // Editar perfil
-
-
 function fillProfileForm() {
   nameInput.value = profileTitle.textContent;
   descripcionInput.value = profileDescription.textContent;
@@ -114,11 +99,7 @@ function handleProfileFormSubmit(evt) {
 
 formElement.addEventListener("submit", handleProfileFormSubmit);
 
-
-
 // Cards
-
-
 function getCardElement({ name = "Sin título", link = "./images/placeholder.jpg" } = {}) {
   const cardTemplate = document
     .querySelector("#card-template")
@@ -137,8 +118,12 @@ function getCardElement({ name = "Sin título", link = "./images/placeholder.jpg
   image.src = link;
   image.alt = name;
 
+  let timer = null;
+
   // like
-  like.addEventListener("click", handleLikeButton);
+  like.addEventListener("click", function(){
+    handleLikeButton(like)
+  });
 
   // eliminar
   deleteCard.addEventListener("click", function () {
@@ -147,13 +132,20 @@ function getCardElement({ name = "Sin título", link = "./images/placeholder.jpg
 
   // abrir imagen
   image.addEventListener("click", function () {
-    popupImage.src = link;
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+           popupImage.src = link;
     popupImage.alt = name;
     popupCaption.textContent = name;
 
     openModal(imagePopup);
+    }, 250);
+ //se implemente un doble clic como lo haria instagram para dar like 
   });
-
+  image.addEventListener("dblclick",function(){
+    clearTimeout(timer);
+     handleLikeButton(like)
+  });
   return cardElement;
 }
 
@@ -162,17 +154,12 @@ function renderCard(name, link, container) {
   container.append(cardElement);
 }
 
-
 // render inicial
 initialCards.forEach(item => {
   renderCard(item.name, item.link, cardsContainer);
 });
 
-
-
 // Nuevo card popup
-
-
 addCardButton.addEventListener("click", function () {
   openModal(newCardPopup);
 });
@@ -198,10 +185,9 @@ cardFormElement.addEventListener("submit", handleCardFormSubmit);
 
 
 
-// Like button
-
-
-function handleLikeButton(evt) {
-  evt.target.classList.toggle("card__like-button_is-active");
-  console.log("Like clickeado");
+function handleLikeButton(element) {
+  // Al eliminar el contador, esta función solo se encarga de alternar la clase.
+  // Como usa 'evt.target', siempre sabrá exactamente a qué corazón le diste clic.
+  element.classList.toggle("card__like-button_is-active");
+  console.log("boton clickeado");
 }
