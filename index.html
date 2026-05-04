@@ -96,23 +96,43 @@
           <h3 class="popup__title">Editar perfil</h3>
 
           <form class="popup__form" id="edit-profile-form">
+
+            <!-- INPUT NOMBRE -->
             <input
               class="popup__input popup__input_type_name"
+              id="name"
               name="name"
               placeholder="Nombre"
               type="text"
+              minlength="2"
+              maxlength="40"
+              required
             />
 
+            <span id="name-error" class="error-hidden"> //cambiar a error-visible
+              Completa este campo
+            </span>
+
+            <!-- INPUT DESCRIPCIÓN -->
             <input
               class="popup__input popup__input_type_description"
+              id="description"
               name="description"
               placeholder="Acerca de mí"
               type="text"
+              minlength="2"
+              maxlength="200"
+              required
             />
+
+            <span id="description-error" class="error-hidden"> //cambiar a error-visible
+              Completa este campo
+            </span>
 
             <button class="button popup__button" type="submit">
               Guardar
             </button>
+
           </form>
         </div>
       </div>

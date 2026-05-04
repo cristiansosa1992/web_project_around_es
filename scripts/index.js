@@ -1,32 +1,18 @@
-// Datos iniciales
+// =======================
+// DATOS INICIALES
+// =======================
 const initialCards = [
-  {
-    name: "Valle de Yosemite",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_yosemite.jpg"
-  },
-  {
-    name: "Lago Louise",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lake-louise.jpg"
-  },
-  {
-    name: "Montañas Calvas",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_bald-mountains.jpg"
-  },
-  {
-    name: "Latemar",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_latemar.jpg"
-  },
-  {
-    name: "Parque Nacional de la Vanoise",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_vanoise.jpg"
-  },
-  {
-    name: "Lago di Braies",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lago.jpg"
-  }
+  { name: "Valle de Yosemite", link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_yosemite.jpg" },
+  { name: "Lago Louise", link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lake-louise.jpg" },
+  { name: "Montañas Calvas", link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_bald-mountains.jpg" },
+  { name: "Latemar", link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_latemar.jpg" },
+  { name: "Parque Nacional de la Vanoise", link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_vanoise.jpg" },
+  { name: "Lago di Braies", link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lago.jpg" }
 ];
 
-// Selección de elementos
+// =======================
+// SELECTORES
+// =======================
 const editButton = document.querySelector(".profile__edit-button");
 const editPopup = document.querySelector("#edit-popup");
 const newCardPopup = document.querySelector("#new-card-popup");
@@ -50,14 +36,16 @@ const formElement = document.querySelector("#edit-profile-form");
 const cardFormElement = document.querySelector("#new-card-form");
 
 const addCardButton = document.querySelector(".profile__add-button");
-
 const cardsContainer = document.querySelector(".cards__list");
 
 // inputs card
 const cardTitle = document.querySelector(".popup__input_type_card-name");
 const cardLink = document.querySelector(".popup__input_type_url");
 
-// Funciones reutilizables
+
+// =======================
+// MODALES
+// =======================
 function openModal(modal) {
   modal.classList.add("popup_is-opened");
 }
@@ -66,12 +54,18 @@ function closeModal(modal) {
   modal.classList.remove("popup_is-opened");
 }
 
-// cerrar popup imagen
-closeImagePopupBtn.addEventListener("click", function () {
-  closeModal(imagePopup);
+// cerrar con ESC
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    const openedPopup = document.querySelector(".popup_is-opened");
+    if (openedPopup) closeModal(openedPopup);
+  }
 });
 
-// Editar perfil
+
+// =======================
+// EDITAR PERFIL
+// =======================
 function fillProfileForm() {
   nameInput.value = profileTitle.textContent;
   descripcionInput.value = profileDescription.textContent;
@@ -80,13 +74,13 @@ function fillProfileForm() {
 function handleOpenEditModal() {
   fillProfileForm();
   openModal(editPopup);
+
+  toggleProfileButtonState(); // 🔥 sincroniza botón
 }
 
 editButton.addEventListener("click", handleOpenEditModal);
 
-closeEditPopupBtn.addEventListener("click", function () {
-  closeModal(editPopup);
-});
+closeEditPopupBtn.addEventListener("click", () => closeModal(editPopup));
 
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
@@ -99,7 +93,10 @@ function handleProfileFormSubmit(evt) {
 
 formElement.addEventListener("submit", handleProfileFormSubmit);
 
-// Cards
+
+// =======================
+// CARDS
+// =======================
 function getCardElement({ name = "Sin título", link = "./images/placeholder.jpg" } = {}) {
   const cardTemplate = document
     .querySelector("#card-template")
@@ -113,39 +110,31 @@ function getCardElement({ name = "Sin título", link = "./images/placeholder.jpg
   const like = cardElement.querySelector(".card__like-button");
   const deleteCard = cardElement.querySelector(".card__delete-button");
 
-  // título e imagen
   title.textContent = name;
   image.src = link;
   image.alt = name;
 
   let timer = null;
 
-  // like
-  like.addEventListener("click", function(){
-    handleLikeButton(like)
-  });
+  like.addEventListener("click", () => handleLikeButton(like));
 
-  // eliminar
-  deleteCard.addEventListener("click", function () {
-    cardElement.remove();
-  });
+  deleteCard.addEventListener("click", () => cardElement.remove());
 
-  // abrir imagen
-  image.addEventListener("click", function () {
+  image.addEventListener("click", () => {
     if (timer) clearTimeout(timer);
     timer = setTimeout(() => {
-           popupImage.src = link;
-    popupImage.alt = name;
-    popupCaption.textContent = name;
-
-    openModal(imagePopup);
+      popupImage.src = link;
+      popupImage.alt = name;
+      popupCaption.textContent = name;
+      openModal(imagePopup);
     }, 250);
- //se implemente un doble clic como lo haria instagram para dar like 
   });
-  image.addEventListener("dblclick",function(){
+
+  image.addEventListener("dblclick", () => {
     clearTimeout(timer);
-     handleLikeButton(like)
+    handleLikeButton(like);
   });
+
   return cardElement;
 }
 
@@ -154,40 +143,77 @@ function renderCard(name, link, container) {
   container.append(cardElement);
 }
 
-// render inicial
 initialCards.forEach(item => {
   renderCard(item.name, item.link, cardsContainer);
 });
 
-// Nuevo card popup
-addCardButton.addEventListener("click", function () {
-  openModal(newCardPopup);
-});
 
-closeNewCardPopupBtn.addEventListener("click", function () {
-  closeModal(newCardPopup);
-});
+// =======================
+// NUEVA CARD
+// =======================
+addCardButton.addEventListener("click", () => openModal(newCardPopup));
+closeNewCardPopupBtn.addEventListener("click", () => closeModal(newCardPopup));
 
 function handleCardFormSubmit(evt) {
   evt.preventDefault();
 
-  const titleValue = cardTitle.value;
-  const linkValue = cardLink.value;
-
-  renderCard(titleValue, linkValue, cardsContainer);
+  renderCard(cardTitle.value, cardLink.value, cardsContainer);
 
   closeModal(newCardPopup);
-
   cardFormElement.reset();
 }
 
 cardFormElement.addEventListener("submit", handleCardFormSubmit);
 
 
-
+// =======================
+// LIKE
+// =======================
 function handleLikeButton(element) {
-  // Al eliminar el contador, esta función solo se encarga de alternar la clase.
-  // Como usa 'evt.target', siempre sabrá exactamente a qué corazón le diste clic.
   element.classList.toggle("card__like-button_is-active");
-  console.log("boton clickeado");
 }
+
+
+// =======================
+// VALIDACIÓN PERFIL
+// =======================
+const profileInputs = formElement.querySelectorAll(".popup__input");
+const profileSubmitButton = formElement.querySelector(".popup__button");
+
+// mostrar error
+function showError(input) {
+  const error = formElement.querySelector(`#${input.id}-error`);
+  error.textContent = input.validationMessage;
+  error.classList.add("error-visible");
+  error.classList.remove("error-hidden");
+}
+
+// ocultar error
+function hideError(input) {
+  const error = formElement.querySelector(`#${input.id}-error`);
+  error.textContent = "";
+  error.classList.remove("error-visible");
+  error.classList.add("error-hidden");
+}
+
+//  activar/desactivar botón
+function toggleProfileButtonState() {
+  if (!formElement.checkValidity()) {
+    profileSubmitButton.disabled = true;
+  } else {
+    profileSubmitButton.disabled = false;
+  }
+}
+
+// escuchar inputs
+profileInputs.forEach((input) => {
+  input.addEventListener("input", () => {
+    if (input.validity.valid) {
+      hideError(input);
+    } else {
+      showError(input);
+    }
+
+    toggleProfileButtonState(); 
+  });
+});
