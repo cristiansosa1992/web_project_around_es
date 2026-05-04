@@ -151,11 +151,17 @@
           <form class="popup__form" id="new-card-form">
             <input
               class="popup__input popup__input_type_card-name"
+              minlength="2"
+              maxlength="30"
               name="place-name"
               placeholder="Título"
               required
               type="text"
+              id="titulo"
             />
+            <span id="titulo-error" class="error-hidden"> 
+              Completa este campo
+            </span>
 
             <input
               class="popup__input popup__input_type_url"
@@ -163,8 +169,12 @@
               placeholder="Enlace a la imagen"
               required
               type="url"
-            />
+              id="url"
 
+            />
+            <span id="url-error" class="error-hidden"> 
+              Ingresa una URL
+            </span>
             <button class="button popup__button" type="submit">
               Crear
             </button>

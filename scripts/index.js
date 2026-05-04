@@ -62,6 +62,13 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+document.addEventListener("click", (event) => {
+  const openedPopup = document.querySelector(".popup_is-opened");
+
+  if (openedPopup && event.target === openedPopup) {
+    closeModal(openedPopup);
+  }
+});
 
 // =======================
 // EDITAR PERFIL
@@ -134,7 +141,7 @@ function getCardElement({ name = "Sin título", link = "./images/placeholder.jpg
     clearTimeout(timer);
     handleLikeButton(like);
   });
-
+closeImagePopupBtn.addEventListener("click", () => closeModal(imagePopup));
   return cardElement;
 }
 
@@ -180,8 +187,26 @@ function handleLikeButton(element) {
 const profileInputs = formElement.querySelectorAll(".popup__input");
 const profileSubmitButton = formElement.querySelector(".popup__button");
 
+
+
+const cardInputs = cardFormElement.querySelectorAll(".popup__input");
+const cardSubmitButton = cardFormElement.querySelector(".popup__button");
+
+cardInputs.forEach((input) => {
+  input.addEventListener("input", () => {
+    if (input.validity.valid) {
+      hideError(input, cardFormElement);
+    } else {
+      showError(input, cardFormElement);
+    }
+
+    toggleProfileButtonState(cardFormElement, cardSubmitButton ); 
+  });
+});
+
+
 // mostrar error
-function showError(input) {
+function showError(input,formElement) {
   const error = formElement.querySelector(`#${input.id}-error`);
   error.textContent = input.validationMessage;
   error.classList.add("error-visible");
@@ -189,7 +214,7 @@ function showError(input) {
 }
 
 // ocultar error
-function hideError(input) {
+function hideError(input,formElement) {
   const error = formElement.querySelector(`#${input.id}-error`);
   error.textContent = "";
   error.classList.remove("error-visible");
@@ -197,11 +222,11 @@ function hideError(input) {
 }
 
 //  activar/desactivar botón
-function toggleProfileButtonState() {
+function toggleProfileButtonState(formElement, SubmitButton) {
   if (!formElement.checkValidity()) {
-    profileSubmitButton.disabled = true;
+    SubmitButton.disabled = true;
   } else {
-    profileSubmitButton.disabled = false;
+    SubmitButton.disabled = false;
   }
 }
 
@@ -209,11 +234,13 @@ function toggleProfileButtonState() {
 profileInputs.forEach((input) => {
   input.addEventListener("input", () => {
     if (input.validity.valid) {
-      hideError(input);
+      hideError(input,formElement);
     } else {
-      showError(input);
+      showError(input,formElement);
     }
 
-    toggleProfileButtonState(); 
+    toggleProfileButtonState(formElement,profileSubmitButton); 
   });
 });
+
+
