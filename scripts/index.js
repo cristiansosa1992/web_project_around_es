@@ -27,13 +27,9 @@ const editButton = document.querySelector(".profile__edit-button");
 const editPopup = document.querySelector("#edit-popup");
 const newCardPopup = document.querySelector("#new-card-popup");
 
-const closeEditPopupBtn = editPopup.querySelector(".popup__close");
-const closeNewCardPopupBtn = newCardPopup.querySelector(".popup__close");
-
 const imagePopup = document.querySelector("#image-popup");
 const popupImage = imagePopup.querySelector(".popup__image");
 const popupCaption = imagePopup.querySelector(".popup__caption");
-const closeImagePopupBtn = imagePopup.querySelector(".popup__close");
 
 const nameInput = document.querySelector(".popup__input_type_name");
 const descripcionInput = document.querySelector(".popup__input_type_description");
@@ -81,6 +77,22 @@ document.addEventListener("click", (event) => {
 });
 
 // =======================
+// FUNCIÓN REUTILIZABLE 
+// =======================
+function setCloseListeners(modal) {
+  const closeButton = modal.querySelector(".popup__close");
+
+  closeButton.addEventListener("click", () => {
+    closeModal(modal);
+  });
+}
+
+//  llamar después de definir la función
+setCloseListeners(editPopup);
+setCloseListeners(newCardPopup);
+setCloseListeners(imagePopup);
+
+// =======================
 // PERFIL
 // =======================
 function fillProfileForm() {
@@ -93,8 +105,6 @@ editButton.addEventListener("click", () => {
   openModal(editPopup);
   toggleButtonState(formElement, profileSubmitButton);
 });
-
-closeEditPopupBtn.addEventListener("click", () => closeModal(editPopup));
 
 formElement.addEventListener("submit", (evt) => {
   evt.preventDefault();
@@ -150,19 +160,21 @@ initialCards.forEach((item) => {
 // =======================
 addCardButton.addEventListener("click", () => openModal(newCardPopup));
 
-closeNewCardPopupBtn.addEventListener("click", () => closeModal(newCardPopup));
-
 cardFormElement.addEventListener("submit", (evt) => {
   evt.preventDefault();
 
-  renderCard(cardFormElement.elements["place-name"].value, cardFormElement.elements["link"].value, cardsContainer);
+  renderCard(
+    cardFormElement.elements["place-name"].value,
+    cardFormElement.elements["link"].value,
+    cardsContainer
+  );
 
   cardFormElement.reset();
   closeModal(newCardPopup);
 });
 
 // =======================
-// VALIDACIÓN (modular)
+// VALIDACIÓN
 // =======================
 setEventListeners(formElement, profileInputs, profileSubmitButton);
 setEventListeners(cardFormElement, cardInputs, cardSubmitButton);
