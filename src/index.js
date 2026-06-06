@@ -8,6 +8,11 @@ import {
   toggleButtonState
 } from "./validate.js";
 
+import { defaultFormConfig } from "./utils/constants.js";
+import { FormValidator } from "./components/FormValidator.js";
+
+// importar componente Card
+
 // =======================
 // DATOS INICIALES
 // =======================
@@ -37,8 +42,16 @@ const descripcionInput = document.querySelector(".popup__input_type_description"
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 
+
+// TODO: Aca hay que instancear la clase FormValidator para cada formulario,
+// y pasarle el formElement correspondiente a cada uno. Además,
+// hay que llamar a setEventListeners para cada formulario, pasando los inputs y el botón de submit correspondientes a cada uno.
 const formElement = document.querySelector("#edit-profile-form");
 const cardFormElement = document.querySelector("#new-card-form");
+
+const editProfileForm = new FormValidator(defaultFormConfig, formElement);
+// TODO: aca activar los listeners
+//editProfileForm.setEventListeners();
 
 const addCardButton = document.querySelector(".profile__add-button");
 const cardsContainer = document.querySelector(".cards__list");
@@ -148,6 +161,9 @@ function getCardElement({ name, link }) {
 }
 
 function renderCard(name, link, container) {
+  // const newCard = new Card(name, link, "#card-template");
+  // const cardElement = newCard.getElement();
+  // container.append(cardElement);
   container.append(getCardElement({ name, link }));
 }
 
