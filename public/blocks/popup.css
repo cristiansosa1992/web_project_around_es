@@ -82,6 +82,10 @@
   margin-bottom: 0;
 }
 
+.popup__input_type_error {
+  border-bottom-color: #ff0000;
+}
+
 .popup__title {
   margin: 0;
   font-size: 24px;
@@ -156,6 +160,13 @@ letter-spacing: 0%;
   border: 1px solid rgba(0, 0, 0, 0.2); 
   cursor: not-allowed; 
 }
+
+.popup__button_disabled {
+  background: #ffffff;
+  color: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  cursor: not-allowed;
+}
 @media screen and (max-width: 544px) {
   .popup {
     bottom: 112px;
@@ -196,4 +207,3 @@ letter-spacing: 0%;
     padding: 0;
   }
 }
-
