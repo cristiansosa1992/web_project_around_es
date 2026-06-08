@@ -1,63 +1,93 @@
-import { DefaultFormConfig } from '../utils/constants.js';
+import type { DefaultFormConfig } from "../utils/constants.js";
 
 export class FormValidator {
-  private inputSelector: string;
-  private submitButtonSelector: string;
-  private inactiveButtonClass: string;
-  private inputErrorClass: string;
-  private errorMessageClass: string;
+  private config: DefaultFormConfig;
   private formElement: HTMLFormElement;
+  private submitButton: HTMLButtonElement;
+  private inputList: HTMLInputElement[];
 
-  constructor(data: DefaultFormConfig, formElement: HTMLFormElement) {
-    this.inputSelector = data.inputSelector;
-    this.submitButtonSelector = data.submitButtonSelector;
-    this.inactiveButtonClass = data.inactiveButtonClass;
-    this.inputErrorClass = data.inputErrorClass;
-    this.errorMessageClass = data.errorMessageClass;
+  constructor(config: DefaultFormConfig, formElement: HTMLFormElement) {
+    this.config = config;
     this.formElement = formElement;
+    this.submitButton = this.formElement.querySelector(
+      this.config.submitButtonSelector,
+    ) as HTMLButtonElement;
+    this.inputList = Array.from(
+      this.formElement.querySelectorAll(this.config.inputSelector),
+    ) as HTMLInputElement[];
   }
 
-  // ¿Qué valores toman estos métodos?
-  private _showInputError(
+  private showInputError(
     inputElement: HTMLInputElement,
-    errorMessage: string
+    errorMessage: string,
   ): void {
+    const errorElement = this.formElement.querySelector(
+      `#${inputElement.id}-error`,
+    ) as HTMLElement;
 
+    errorElement.textContent = errorMessage;
+    errorElement.classList.add(this.config.errorMessageClass);
+    errorElement.classList.remove(this.config.hiddenErrorClass);
+    inputElement.classList.add(this.config.inputErrorClass);
   }
 
-  private _hideInputError(
-    inputElement: HTMLInputElement
-  ): void {
+  private hideInputError(inputElement: HTMLInputElement): void {
+    const errorElement = this.formElement.querySelector(
+      `#${inputElement.id}-error`,
+    ) as HTMLElement;
 
+    errorElement.textContent = "";
+    errorElement.classList.remove(this.config.errorMessageClass);
+    errorElement.classList.add(this.config.hiddenErrorClass);
+    inputElement.classList.remove(this.config.inputErrorClass);
   }
 
-  private _checkInputValidity(
-    inputElement: HTMLInputElement
-  ): void {
-
+  private checkInputValidity(inputElement: HTMLInputElement): void {
+    if (inputElement.validity.valid) {
+      this.hideInputError(inputElement);
+    } else {
+      this.showInputError(inputElement, inputElement.validationMessage);
+    }
   }
 
-  private _toggleButtonState(): void {
-
+  private hasInvalidInput(): boolean {
+    return this.inputList.some((inputElement) => !inputElement.validity.valid);
   }
 
-  private _setEventListeners(): void {
+  private toggleButtonState(): void {
+    if (this.hasInvalidInput()) {
+      this.submitButton.disabled = true;
+      this.submitButton.classList.add(this.config.inactiveButtonClass);
+    } else {
+      this.submitButton.disabled = false;
+      this.submitButton.classList.remove(this.config.inactiveButtonClass);
+    }
+  }
 
+  private setEventListeners(): void {
+    this.toggleButtonState();
+
+    this.inputList.forEach((inputElement) => {
+      inputElement.addEventListener("input", () => {
+        this.checkInputValidity(inputElement);
+        this.toggleButtonState();
+      });
+    });
   }
 
   public enableValidation(): void {
-    this._setEventListeners();
+    this.formElement.addEventListener("submit", (evt: SubmitEvent) => {
+      evt.preventDefault();
+    });
+
+    this.setEventListeners();
   }
+
   public resetValidation(): void {
-  const inputList = Array.from(
-    this.formElement.querySelectorAll(this.inputSelector)
-  ) as HTMLInputElement[];
+    this.inputList.forEach((inputElement) => {
+      this.hideInputError(inputElement);
+    });
 
-  inputList.forEach((inputElement) => {
-    this._hideInputError(inputElement);
-  });
-
-  this._toggleButtonState();
-}
-
+    this.toggleButtonState();
+  }
 }
