@@ -3,9 +3,9 @@ interface UserInfoSelectors {
   userDescriptionSelector: string;
 }
 
-interface UserData {
+export interface UserData {
   name: string;
-  description: string;
+  about: string;
 }
 
 export class UserInfo {
@@ -24,12 +24,12 @@ export class UserInfo {
   public getUserInfo(): UserData {
     return {
       name: this.userNameElement.textContent ?? "",
-      description: this.userDescriptionElement.textContent ?? "",
+      about: this.userDescriptionElement.textContent ?? "",
     };
   }
 
   public setUserInfo(data: UserData): void {
     this.userNameElement.textContent = data.name;
-    this.userDescriptionElement.textContent = data.description;
+    this.userDescriptionElement.textContent = data.about;
   }
 }

@@ -4,7 +4,8 @@ import { PopupWithForm } from "./components/PopupWithForm.js";
 import { PopupWithImage } from "./components/PopupWithImage.js";
 import { Section } from "./components/Section.js";
 import { UserInfo } from "./components/UserInfo.js";
-import { addCardButton, defaultFormConfig, editButton, editProfileFormElement, initialCards, newCardFormElement, } from "./utils/constants.js";
+import { addCardButton, defaultFormConfig, editButton, editProfileFormElement, newCardFormElement, } from "./utils/constants.js";
+import { Api } from "./api.js";
 const userInfo = new UserInfo({
     userNameSelector: ".profile__title",
     userDescriptionSelector: ".profile__description",
@@ -18,21 +19,21 @@ const createCard = (data) => {
     return card.generateCard();
 };
 const cardSection = new Section({
-    items: initialCards,
     renderer: (item) => {
         cardSection.addItem(createCard(item));
     },
 }, ".cards__list");
-cardSection.renderItems();
 const editProfileValidator = new FormValidator(defaultFormConfig, editProfileFormElement);
 editProfileValidator.enableValidation();
 const newCardValidator = new FormValidator(defaultFormConfig, newCardFormElement);
 newCardValidator.enableValidation();
-const editProfilePopup = new PopupWithForm("#edit-popup", (inputValues) => {
-    userInfo.setUserInfo({
+const editProfilePopup = new PopupWithForm("#edit-popup", async (inputValues) => {
+    const formData = {
         name: inputValues.name,
-        description: inputValues.description,
-    });
+        about: inputValues.description,
+    };
+    const data = await api.editUser(formData);
+    userInfo.setUserInfo(data);
     editProfilePopup.close();
 });
 editProfilePopup.setEventListeners();
@@ -50,7 +51,7 @@ editButton.addEventListener("click", () => {
     const nameInput = editProfileFormElement.elements.namedItem("name");
     const descriptionInput = editProfileFormElement.elements.namedItem("description");
     nameInput.value = currentUserInfo.name;
-    descriptionInput.value = currentUserInfo.description;
+    descriptionInput.value = currentUserInfo.about;
     editProfileValidator.resetValidation();
     editProfilePopup.open();
 });
@@ -58,3 +59,35 @@ addCardButton.addEventListener("click", () => {
     newCardValidator.resetValidation();
     newCardPopup.open();
 });
+//creacion API
+// 1. Creamos la instancia de la API configurando la URL base y el token
+const api = new Api({
+    baseUrl: 'https://around-api.es.tripleten-services.com/v1',
+    headers: {
+        authorization: '33edc9a1-01c9-44d0-b7d0-a56b0a4c478b',
+        'Content-Type': 'application/json'
+    }
+});
+//prueba de conexion
+async function user() {
+    try {
+        const data = await api.getUser();
+        userInfo.setUserInfo(data);
+        console.log("Información del usuario recibida:", data);
+    }
+    catch (err) {
+        console.error("Error al traer usuario:", err);
+    }
+}
+async function card() {
+    try {
+        const data = await api.getInitialCards();
+        cardSection.renderItems(data);
+        console.log("Tarjetas iniciales recibidas:", data);
+    }
+    catch (err) {
+        console.error("Error al traer tarjetas:", err);
+    }
+}
+user();
+card();
