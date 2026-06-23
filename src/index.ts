@@ -10,7 +10,6 @@ import {
   defaultFormConfig,
   editButton,
   editProfileFormElement,
-  initialCards,
   newCardFormElement,
 } from "./utils/constants.js";
 
@@ -120,29 +119,23 @@ const api = new Api({
 });
 
 //prueba de conexion
-async function user() {
+async function loadData() {
   try {
-    const data = await api.getUser();
-    userInfo.setUserInfo(data);
-    console.log("Información del usuario recibida:", data);
+    const [userData, cardsData] = await Promise.all([
+      api.getUser(),
+      api.getInitialCards(),
+    ]);
+
+    userInfo.setUserInfo(userData);
+    cardSection.renderItems(cardsData);
+
+    console.log(userData);
+    console.log(cardsData);
+
   } catch (err) {
-    console.error("Error al traer usuario:", err);
+    console.error(err);
   }
 }
 
+loadData();
 
-async function card() {
-  try {
-    const data = await api.getInitialCards();
-    cardSection.renderItems(data);
-    console.log("Tarjetas iniciales recibidas:", data);
-  } catch (err) {
-    console.error("Error al traer tarjetas:", err);
-  }
-}
-
-
-
-
-user();
-card();

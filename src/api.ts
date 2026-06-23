@@ -1,4 +1,5 @@
 import {UserData} from "./components/UserInfo.js";
+import {CardData} from "./components/Card.js"
 
 interface ApiOptions{
   baseUrl:string;
@@ -22,29 +23,30 @@ export class Api {
     return Promise.reject(`Error: ${res.status}`);
   }
 
-  async getUser() {
-    const res = await fetch(`${this._baseUrl}/users/me`, {
-      headers: this._headers,
-    });
-    return this._checkResponse(res);
-  }
+async getUser(): Promise<UserData> {
+  const res = await fetch(`${this._baseUrl}/users/me`, {
+    headers: this._headers,
+  });
 
-  async getInitialCards() {
-    const res = await fetch(`${this._baseUrl}/cards`, {
-      headers: this._headers,
-    });
-    return this._checkResponse(res);
-  }
+  return this._checkResponse(res);
+}
 
-  async editUser(data :UserData) {
-    const res = await fetch(`${this._baseUrl}/users/me`, {
-      headers: this._headers,
-      method:"PATCH",
+async getInitialCards(): Promise<CardData[]> {
+  const res = await fetch(`${this._baseUrl}/cards`, {
+    headers: this._headers,
+  });
 
-      body: JSON.stringify(data)
+  return this._checkResponse(res);
+}
 
-    });
-    return this._checkResponse(res);
-  }
+async editUser(data: UserData): Promise<UserData> {
+  const res = await fetch(`${this._baseUrl}/users/me`, {
+    headers: this._headers,
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+
+  return this._checkResponse(res);
+}
 
 }

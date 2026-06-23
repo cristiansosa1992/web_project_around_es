@@ -26,7 +26,7 @@ export class Api {
         const res = await fetch(`${this._baseUrl}/users/me`, {
             headers: this._headers,
             method: "PATCH",
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
         });
         return this._checkResponse(res);
     }
