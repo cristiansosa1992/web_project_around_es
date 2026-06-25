@@ -33,4 +33,3 @@ export class UserInfo {
     this.userDescriptionElement.textContent = data.about;
   }
 }
-

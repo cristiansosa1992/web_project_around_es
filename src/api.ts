@@ -16,11 +16,13 @@ export class Api {
   }
 
   // Método auxiliar privado para no repetir código de validación
-  private _checkResponse(res: Response) {
-    if (res.ok) {
-      return res.json();
+  private async _checkResponse(res: Response) {
+    if (!res.ok) {
+      return Promise.reject(`Error: ${res.status}`);
     }
-    return Promise.reject(`Error: ${res.status}`);
+
+    const text = await res.text();
+    return text ? JSON.parse(text) : {};
   }
 
 async getUser(): Promise<UserData> {
@@ -47,6 +49,47 @@ async editUser(data: UserData): Promise<UserData> {
   });
 
   return this._checkResponse(res);
+}
+
+async addCard(data: CardData): Promise<CardData> {
+  const res = await fetch(`${this._baseUrl}/cards`, {
+    method: "POST",
+    headers: this._headers,
+    body: JSON.stringify({
+      name: data.name,
+      link: data.link,
+    }),
+  });
+
+  return this._checkResponse(res);
+}
+
+async deleteCard(cardId: string): Promise<void> {
+  const res = await fetch(`${this._baseUrl}/cards/${cardId}`, {
+    method: "DELETE",
+    headers: this._headers,
+  });
+
+  await this._checkResponse(res);
+}
+//https://around-api.es.tripleten-services.com/v1/cards/:cardId/likes
+
+async addLike  (cardId: string): Promise <CardData>{
+const res = await fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
+    method: "PUT",
+    headers: this._headers,
+  });
+  return this._checkResponse(res)
+
+}
+
+async removeLike  (cardId: string): Promise <CardData>{
+const res = await fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
+    method: "DELETE",
+    headers: this._headers,
+  });
+  return this._checkResponse(res)
+
 }
 
 }

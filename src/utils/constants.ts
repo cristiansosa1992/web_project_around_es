@@ -18,7 +18,7 @@ export const defaultFormConfig: DefaultFormConfig = {
   hiddenErrorClass: "error-hidden",
 };
 
-export const initialCards: CardData[] = [
+/*export const initialCards: CardData[] = [
   {
     name: "Valle de Yosemite",
     link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_yosemite.jpg",
@@ -43,7 +43,7 @@ export const initialCards: CardData[] = [
     name: "Lago di Braies",
     link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lago.jpg",
   },
-];
+];  */
 
 export const editButton = document.querySelector(
   ".profile__edit-button",

@@ -13,7 +13,15 @@ import {
   newCardFormElement,
 } from "./utils/constants.js";
 
-import{Api}from"./api.js";
+import { Api } from "./api.js";
+
+const api = new Api({
+  baseUrl: "https://around-api.es.tripleten-services.com/v1",
+  headers: {
+    authorization: "33edc9a1-01c9-44d0-b7d0-a56b0a4c478b",
+    "Content-Type": "application/json",
+  },
+});
 
 const userInfo = new UserInfo({
   userNameSelector: ".profile__title",
@@ -23,14 +31,39 @@ const userInfo = new UserInfo({
 const imagePopup = new PopupWithImage("#image-popup");
 imagePopup.setEventListeners();
 
+//DUDAS AQUI SOBRE ELIMINAR LA CARTA
 const createCard = (data: CardData): HTMLElement => {
-  const card = new Card(data, "#card-template", (cardData) => {
-    imagePopup.open(cardData);
-  });
+  const card = new Card(
+    data,
+    "#card-template",
+    (cardData) => {
+      imagePopup.open(cardData);
+    },
+    async () => {
+      if (!data._id) {
+        return;
+      }
+
+
+      await api.deleteCard(data._id);
+
+    },
+    async (likeStatus: boolean)=>{
+       if (!data._id) {
+        return;
+      }
+      if (likeStatus){
+       await api.addLike (data._id)
+       return likeStatus
+      }
+      await api.removeLike (data._id)
+      return likeStatus;
+    }
+
+  );
 
   return card.generateCard();
 };
-
 const cardSection = new Section<CardData>(
   {
    
@@ -71,18 +104,31 @@ const editProfilePopup = new PopupWithForm(
 
 editProfilePopup.setEventListeners();
 
+
+// Instancia del popup para crear nuevas tarjetas.
+// Cuando el usuario envía el formulario:
+// 1. Envía los datos al servidor mediante POST.
+// 2. Recibe la tarjeta creada.
+// 3. Genera el elemento visual de la tarjeta.
+// 4. La agrega a la página.
+// 5. Cierra el popup.
+
 const newCardPopup = new PopupWithForm(
   "#new-card-popup",
-  (inputValues) => {
-    const cardElement = createCard({
+  async (inputValues) => {
+    const cardData = await api.addCard({
       name: inputValues["place-name"],
       link: inputValues.link,
+      isLiked: false,
     });
 
+    const cardElement = createCard(cardData);
     cardSection.addItem(cardElement);
     newCardPopup.close();
   },
 );
+
+
 
 newCardPopup.setEventListeners();
 
@@ -107,17 +153,6 @@ addCardButton.addEventListener("click", () => {
   newCardPopup.open();
 });
 
-//creacion API
-
-// 1. Creamos la instancia de la API configurando la URL base y el token
-const api = new Api({
-  baseUrl: 'https://around-api.es.tripleten-services.com/v1',
-  headers: {
-    authorization: '33edc9a1-01c9-44d0-b7d0-a56b0a4c478b',
-    'Content-Type': 'application/json'
-  }
-});
-
 //prueba de conexion
 async function loadData() {
   try {
@@ -138,4 +173,3 @@ async function loadData() {
 }
 
 loadData();
-
