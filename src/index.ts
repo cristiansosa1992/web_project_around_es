@@ -2,6 +2,7 @@ import { Card } from "./components/Card.js";
 import type { CardData } from "./components/Card.js";
 import { FormValidator } from "./components/FormValidator.js";
 import { PopupWithForm } from "./components/PopupWithForm.js";
+import { PopupWithConfirmation } from "./components/PopupWithConfirmation.js";
 import { PopupWithImage } from "./components/PopupWithImage.js";
 import { Section } from "./components/Section.js";
 import { UserInfo } from "./components/UserInfo.js";
@@ -31,6 +32,11 @@ const userInfo = new UserInfo({
 const imagePopup = new PopupWithImage("#image-popup");
 imagePopup.setEventListeners();
 
+const confirmationDeletePopup = new PopupWithConfirmation(
+  "#confirmation__delete-popup",
+);
+confirmationDeletePopup.setEventListeners();
+
 //DUDAS AQUI SOBRE ELIMINAR LA CARTA
 const createCard = (data: CardData): HTMLElement => {
   const card = new Card(
@@ -39,14 +45,18 @@ const createCard = (data: CardData): HTMLElement => {
     (cardData) => {
       imagePopup.open(cardData);
     },
-    async () => {
-      if (!data._id) {
-        return;
-      }
+    () => {
+      confirmationDeletePopup.open();
 
+      confirmationDeletePopup.setSubmitAction(async () => {
+        if (!data._id) {
+          return;
+        }
 
-      await api.deleteCard(data._id);
-
+        await api.deleteCard(data._id);
+        card.removeCard();
+        confirmationDeletePopup.close();
+      });
     },
     async (likeStatus: boolean)=>{
        if (!data._id) {

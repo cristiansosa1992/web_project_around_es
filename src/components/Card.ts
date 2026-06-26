@@ -10,7 +10,7 @@ export class Card {
   private link: string;
   private templateSelector: string;
   private handleCardClick: (data: CardData) => void;
-  private handleDeleteClick: () => Promise<void>;
+  private handleDeleteClick: () => void;
   private element!: HTMLElement;
   private handleLikeClick :(isLiked:boolean)=> Promise<boolean|void>;
 private isLiked : boolean;
@@ -18,7 +18,7 @@ private isLiked : boolean;
     data: CardData,
     templateSelector: string,
     handleCardClick: (data: CardData) => void,
-    handleDeleteClick: () => Promise<void>,
+    handleDeleteClick: () => void,
     handleLikeClick : (isLiked:boolean) => Promise<boolean|void>
   ) {
     this.name = data.name;
@@ -66,15 +66,11 @@ private isLiked : boolean;
      }
     });
   
-    deleteButton.addEventListener("click", async () => {
-      try {
-        await this.handleDeleteClick();
-        this.element.remove();
-      } catch (err) {
-        console.error(err);
-      }
+    deleteButton.addEventListener("click", () => {
+      this.handleDeleteClick();
     });
 
+    
     imageElement.addEventListener("click", () => {
       this.handleCardClick({
         name: this.name,
@@ -108,4 +104,9 @@ private isLiked : boolean;
 
     return this.element;
   }
+
+  public removeCard(): void {
+    this.element.remove();
+  }
+
 }

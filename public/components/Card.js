@@ -32,14 +32,8 @@ export class Card {
                 console.error(err);
             }
         });
-        deleteButton.addEventListener("click", async () => {
-            try {
-                await this.handleDeleteClick();
-                this.element.remove();
-            }
-            catch (err) {
-                console.error(err);
-            }
+        deleteButton.addEventListener("click", () => {
+            this.handleDeleteClick();
         });
         imageElement.addEventListener("click", () => {
             this.handleCardClick({
@@ -60,5 +54,8 @@ export class Card {
         likeButton.classList.toggle("card__like-button_is-active", this.isLiked);
         this.setEventListeners();
         return this.element;
+    }
+    removeCard() {
+        this.element.remove();
     }
 }

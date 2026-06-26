@@ -52,7 +52,7 @@
 .popup__content {
   max-width: 430px;
   width: 100%;
-  min-height: 323px;
+  min-height: 181px;
   background-color: #fff;
   border-radius: 10px;
   position: relative;
@@ -186,12 +186,7 @@ letter-spacing: 0%;
     height: 20px;
   }
 
-  .popup__content {
-    width: 100%;
-    max-width: calc(100% - 19px * 2);
-    margin-top: 8px;
-    padding: 25px 22px;
-  }
+
 
   .popup__form {
     margin-top: 53px;
