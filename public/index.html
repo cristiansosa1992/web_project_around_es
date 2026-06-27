@@ -222,6 +222,43 @@
 
     </div>
 
+    //INTENTO CAMBIAR FOTO
+    <div class="popup" id="edit-avatar-popup">
+        <div class="popup__content">
+          <button
+            aria-label="Cerrar ventana emergente"
+            class="popup__close"
+            type="button"
+          ></button>
+
+          <h3 class="popup__title">Cambiar foto de perfil</h3>
+
+          <form class="popup__form" id="edit-photo-form">
+
+          
+            <input
+              class="popup__input popup__input_type_description"
+              id="description"
+              name="description"
+              placeholder=""
+              type="text"
+              minlength="2"
+              maxlength="200"
+              required
+            />
+
+            <span id="description-error" class="error-hidden"> //cambiar a error-visible
+              Completa este campo
+            </span>
+
+            <button class="button popup__button" type="submit">
+              Guardar
+            </button>
+
+          </form>
+        </div>
+      </div>
+
     <script type="module" src="./index.js"></script>
   </body>
 </html>

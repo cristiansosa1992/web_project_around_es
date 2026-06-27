@@ -15,6 +15,7 @@ import {
 } from "./utils/constants.js";
 
 import { Api } from "./api.js";
+import {avatarButton} from "./utils/constants.js"
 
 const api = new Api({
   baseUrl: "https://around-api.es.tripleten-services.com/v1",
@@ -32,6 +33,10 @@ const userInfo = new UserInfo({
 const imagePopup = new PopupWithImage("#image-popup");
 imagePopup.setEventListeners();
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 99a3e1e (open editar perfil)
 const confirmationDeletePopup = new PopupWithConfirmation(
   "#confirmation__delete-popup",
 );
@@ -115,6 +120,15 @@ const editProfilePopup = new PopupWithForm(
 editProfilePopup.setEventListeners();
 
 
+const editAvatarPopup = new PopupWithForm ("#edit-avatar-popup", ()=>{
+  // agregar logica del patch
+  // console.log("hice click")
+});
+editAvatarPopup.setEventListeners();
+
+
+
+
 // Instancia del popup para crear nuevas tarjetas.
 // Cuando el usuario envía el formulario:
 // 1. Envía los datos al servidor mediante POST.
@@ -182,4 +196,11 @@ async function loadData() {
   }
 }
 
+avatarButton.addEventListener("click",()=>{
+editAvatarPopup.open();
+}); 
+
+
 loadData();
+
+
