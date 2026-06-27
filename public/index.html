@@ -23,7 +23,7 @@
         <section class="profile page__section">
           <img
             class="profile__image"
-            src="./images/avatar.jpg"
+            src=""
             alt="Avatar"
           />
 
@@ -222,7 +222,6 @@
 
     </div>
 
-    //INTENTO CAMBIAR FOTO
     <div class="popup" id="edit-avatar-popup">
         <div class="popup__content">
           <button
@@ -233,22 +232,20 @@
 
           <h3 class="popup__title">Cambiar foto de perfil</h3>
 
-          <form class="popup__form" id="edit-photo-form">
+          <form class="popup__form" id="edit-avatar-form">
 
           
             <input
-              class="popup__input popup__input_type_description"
-              id="description"
-              name="description"
-              placeholder=""
-              type="text"
-              minlength="2"
-              maxlength="200"
+              class="popup__input popup__input_type_avatar"
+              id="avatar"
+              name="avatar"
+              placeholder="Enlace a la imagen"
+              type="url"
               required
             />
 
-            <span id="description-error" class="error-hidden"> //cambiar a error-visible
-              Completa este campo
+            <span id="avatar-error" class="error-hidden">
+              Ingresa una URL
             </span>
 
             <button class="button popup__button" type="submit">

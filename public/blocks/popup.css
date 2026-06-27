@@ -52,11 +52,7 @@
 .popup__content {
   max-width: 430px;
   width: 100%;
-<<<<<<< HEAD
   min-height: 181px;
-=======
-  min-height: 131px;
->>>>>>> 99a3e1e (open editar perfil)
   background-color: #fff;
   border-radius: 10px;
   position: relative;

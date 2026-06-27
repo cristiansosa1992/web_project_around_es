@@ -64,4 +64,12 @@ export class Api {
         });
         return this._checkResponse(res);
     }
+    async editAvatar(avatar) {
+        const res = await fetch(`${this._baseUrl}/users/me/avatar`, {
+            headers: this._headers,
+            method: "PATCH",
+            body: JSON.stringify({ avatar }),
+        });
+        return this._checkResponse(res);
+    }
 }

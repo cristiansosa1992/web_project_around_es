@@ -22,7 +22,7 @@ export const defaultFormConfig: DefaultFormConfig = {
 
 export const avatarButton = document.querySelector(
   ".profile__image",
-) as HTMLButtonElement;
+) as HTMLImageElement;
 
 export const editButton = document.querySelector(
   ".profile__edit-button",
@@ -38,4 +38,8 @@ export const editProfileFormElement = document.querySelector(
 
 export const newCardFormElement = document.querySelector(
   "#new-card-form",
+) as HTMLFormElement;
+
+export const editAvatarFormElement = document.querySelector(
+  "#edit-avatar-form",
 ) as HTMLFormElement;

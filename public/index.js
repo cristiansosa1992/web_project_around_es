@@ -5,9 +5,8 @@ import { PopupWithConfirmation } from "./components/PopupWithConfirmation.js";
 import { PopupWithImage } from "./components/PopupWithImage.js";
 import { Section } from "./components/Section.js";
 import { UserInfo } from "./components/UserInfo.js";
-import { addCardButton, defaultFormConfig, editButton, editProfileFormElement, newCardFormElement, } from "./utils/constants.js";
+import { addCardButton, defaultFormConfig, editButton, editAvatarFormElement, editProfileFormElement, newCardFormElement, avatarButton, } from "./utils/constants.js";
 import { Api } from "./api.js";
-import { avatarButton } from "./utils/constants.js";
 const api = new Api({
     baseUrl: "https://around-api.es.tripleten-services.com/v1",
     headers: {
@@ -18,6 +17,7 @@ const api = new Api({
 const userInfo = new UserInfo({
     userNameSelector: ".profile__title",
     userDescriptionSelector: ".profile__description",
+    userAvatarSelector: ".profile__image",
 });
 const imagePopup = new PopupWithImage("#image-popup");
 imagePopup.setEventListeners();
@@ -59,6 +59,8 @@ const editProfileValidator = new FormValidator(defaultFormConfig, editProfileFor
 editProfileValidator.enableValidation();
 const newCardValidator = new FormValidator(defaultFormConfig, newCardFormElement);
 newCardValidator.enableValidation();
+const editAvatarValidator = new FormValidator(defaultFormConfig, editAvatarFormElement);
+editAvatarValidator.enableValidation();
 const editProfilePopup = new PopupWithForm("#edit-popup", async (inputValues) => {
     const formData = {
         name: inputValues.name,
@@ -69,9 +71,16 @@ const editProfilePopup = new PopupWithForm("#edit-popup", async (inputValues) =>
     editProfilePopup.close();
 });
 editProfilePopup.setEventListeners();
-const editAvatarPopup = new PopupWithForm("#edit-avatar-popup", () => {
-    // agregar logica del patch
-    // console.log("hice click")
+// EDITAR AVATAR
+const editAvatarPopup = new PopupWithForm("#edit-avatar-popup", async (data) => {
+    try {
+        const user = await api.editAvatar(data.avatar);
+        userInfo.setUserInfo(user);
+        editAvatarPopup.close();
+    }
+    catch (err) {
+        console.error(err);
+    }
 });
 editAvatarPopup.setEventListeners();
 // Instancia del popup para crear nuevas tarjetas.
@@ -122,6 +131,7 @@ async function loadData() {
     }
 }
 avatarButton.addEventListener("click", () => {
+    editAvatarValidator.resetValidation();
     editAvatarPopup.open();
 });
 loadData();

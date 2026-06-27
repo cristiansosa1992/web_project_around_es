@@ -41,7 +41,7 @@ async getInitialCards(): Promise<CardData[]> {
   return this._checkResponse(res);
 }
 
-async editUser(data: UserData): Promise<UserData> {
+async editUser(data: Pick<UserData, "name" | "about">): Promise<UserData> {
   const res = await fetch(`${this._baseUrl}/users/me`, {
     headers: this._headers,
     method: "PATCH",
@@ -90,6 +90,16 @@ const res = await fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
   });
   return this._checkResponse(res)
 
+}
+
+async editAvatar(avatar: string): Promise<UserData> {
+  const res = await fetch(`${this._baseUrl}/users/me/avatar`, {
+    headers: this._headers,
+    method: "PATCH",
+    body: JSON.stringify({ avatar }),
+  });
+
+  return this._checkResponse(res);
 }
 
 }

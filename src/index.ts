@@ -10,12 +10,13 @@ import {
   addCardButton,
   defaultFormConfig,
   editButton,
+  editAvatarFormElement,
   editProfileFormElement,
   newCardFormElement,
+  avatarButton,
 } from "./utils/constants.js";
 
 import { Api } from "./api.js";
-import {avatarButton} from "./utils/constants.js"
 
 const api = new Api({
   baseUrl: "https://around-api.es.tripleten-services.com/v1",
@@ -28,15 +29,13 @@ const api = new Api({
 const userInfo = new UserInfo({
   userNameSelector: ".profile__title",
   userDescriptionSelector: ".profile__description",
+  userAvatarSelector: ".profile__image",
 });
 
 const imagePopup = new PopupWithImage("#image-popup");
 imagePopup.setEventListeners();
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 99a3e1e (open editar perfil)
 const confirmationDeletePopup = new PopupWithConfirmation(
   "#confirmation__delete-popup",
 );
@@ -103,6 +102,12 @@ const newCardValidator = new FormValidator(
 );
 newCardValidator.enableValidation();
 
+const editAvatarValidator = new FormValidator(
+  defaultFormConfig,
+  editAvatarFormElement,
+);
+editAvatarValidator.enableValidation();
+
 const editProfilePopup = new PopupWithForm(
   "#edit-popup",
  async (inputValues) => {
@@ -119,11 +124,21 @@ const editProfilePopup = new PopupWithForm(
 
 editProfilePopup.setEventListeners();
 
+// EDITAR AVATAR
+const editAvatarPopup = new PopupWithForm(
+  "#edit-avatar-popup",
+  async (data) => {
+    try {
+      const user = await api.editAvatar(data.avatar);
 
-const editAvatarPopup = new PopupWithForm ("#edit-avatar-popup", ()=>{
-  // agregar logica del patch
-  // console.log("hice click")
-});
+      userInfo.setUserInfo(user);
+      editAvatarPopup.close();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+);
+
 editAvatarPopup.setEventListeners();
 
 
@@ -197,6 +212,7 @@ async function loadData() {
 }
 
 avatarButton.addEventListener("click",()=>{
+editAvatarValidator.resetValidation();
 editAvatarPopup.open();
 }); 
 
