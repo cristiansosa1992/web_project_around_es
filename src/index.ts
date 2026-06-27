@@ -111,14 +111,22 @@ editAvatarValidator.enableValidation();
 const editProfilePopup = new PopupWithForm(
   "#edit-popup",
  async (inputValues) => {
-    const formData =  {
-      name: inputValues.name,
-      about: inputValues.description,
-    }
+    try {
+      editProfilePopup.setLoading(true);
 
-    const data = await api.editUser(formData)
-    userInfo.setUserInfo(data);
-    editProfilePopup.close();
+      const formData =  {
+        name: inputValues.name,
+        about: inputValues.description,
+      }
+
+      const data = await api.editUser(formData)
+      userInfo.setUserInfo(data);
+      editProfilePopup.close();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      editProfilePopup.setLoading(false);
+    }
   },
 );
 
@@ -129,12 +137,15 @@ const editAvatarPopup = new PopupWithForm(
   "#edit-avatar-popup",
   async (data) => {
     try {
+      editAvatarPopup.setLoading(true);
       const user = await api.editAvatar(data.avatar);
 
       userInfo.setUserInfo(user);
       editAvatarPopup.close();
     } catch (err) {
       console.error(err);
+    } finally {
+      editAvatarPopup.setLoading(false);
     }
   }
 );
@@ -155,15 +166,24 @@ editAvatarPopup.setEventListeners();
 const newCardPopup = new PopupWithForm(
   "#new-card-popup",
   async (inputValues) => {
-    const cardData = await api.addCard({
-      name: inputValues["place-name"],
-      link: inputValues.link,
-      isLiked: false,
-    });
+    try {
+      newCardPopup.setLoading(true);
 
-    const cardElement = createCard(cardData);
-    cardSection.addItem(cardElement);
-    newCardPopup.close();
+      const cardData = await api.addCard({
+        name: inputValues["place-name"],
+        link: inputValues.link,
+        isLiked: false,
+      });
+
+      const cardElement = createCard(cardData);
+      cardSection.addItem(cardElement);
+      newCardPopup.close();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      newCardPopup.setLoading(false);
+    }
+
   },
 );
 

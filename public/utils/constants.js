@@ -6,7 +6,7 @@ export const defaultFormConfig = {
     errorMessageClass: "error-visible",
     hiddenErrorClass: "error-hidden",
 };
-export const avatarButton = document.querySelector(".profile__image");
+export const avatarButton = document.querySelector(".profile__image-edit");
 export const editButton = document.querySelector(".profile__edit-button");
 export const addCardButton = document.querySelector(".profile__add-button");
 export const editProfileFormElement = document.querySelector("#edit-profile-form");

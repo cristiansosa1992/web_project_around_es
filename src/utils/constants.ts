@@ -21,7 +21,7 @@ export const defaultFormConfig: DefaultFormConfig = {
 
 
 export const avatarButton = document.querySelector(
-  ".profile__image",
+  ".profile__image-edit",
 ) as HTMLImageElement;
 
 export const editButton = document.querySelector(

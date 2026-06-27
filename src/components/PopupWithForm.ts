@@ -6,6 +6,8 @@ export class PopupWithForm extends Popup {
   private formElement: HTMLFormElement;
   private inputList: HTMLInputElement[];
   private handleFormSubmit: FormSubmitHandler;
+  private submitButton: HTMLButtonElement;
+  private submitButtonText: string;
 
   constructor(popupSelector: string, handleFormSubmit: FormSubmitHandler) {
     super(popupSelector);
@@ -13,6 +15,10 @@ export class PopupWithForm extends Popup {
     this.formElement = this.popupElement.querySelector(
       ".popup__form",
     ) as HTMLFormElement;
+    this.submitButton = this.formElement.querySelector(
+      ".popup__button",
+    ) as HTMLButtonElement;
+    this.submitButtonText = this.submitButton.textContent ?? "";
     this.inputList = Array.from(
       this.formElement.querySelectorAll(".popup__input"),
     ) as HTMLInputElement[];
@@ -41,5 +47,9 @@ export class PopupWithForm extends Popup {
   public close(): void {
     super.close();
     this.formElement.reset();
+  }
+
+  public setLoading(value: boolean): void {
+    this.submitButton.textContent = value ? "Guardando..." : this.submitButtonText;
   }
 }
